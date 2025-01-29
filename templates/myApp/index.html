@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center">
+        <h1 class="display-4 mb-4">Weather Forecast</h1>
+        <p class="lead">Check the current weather conditions for any city!</p>
+    </div>
+
+    <div class="card shadow-sm p-4">
+        <form action="" method="get" class="row g-3 justify-content-center">
+            <div class="col-auto">
+                <label for="query" class="visually-hidden">City Name:</label>
+                <input type="text" name="query" id="query" class="form-control" placeholder="Enter city name">
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary btn-lg">Get The Weather</button>
+            </div>
+        </form>
+    </div>
+
+    {% if weather.error %}
+    <div class="alert alert-danger mt-4" role="alert">
+        {{ weather.error }}
+    </div>
+    {% elif weather %}
+    <div class="mt-5">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Current Weather in {{ city }}</h2>
+            <p class="fs-4">{{ weather.current.condition.text }}</p>
+            <img src="{{ weather.current.condition.icon }}" alt="Weather Icon" class="mb-3">
+            <p class="display-6">{{ weather.current.temp_c }}&deg;C</p>
+        </div>
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-6 mb-5">
+                <table class="table table-bordered table-hover table-striped">
+                    <tbody>
+                        <tr>
+                            <th>City</th>
+                            <td>{{ city }}</td>
+                        </tr>
+                        <tr>
+                            <th>Temperature</th>
+                            <td>{{ weather.current.temp_c }}&deg;C</td>
+                        </tr>
+                        <tr>
+                            <th>Weather Condition</th>
+                            <td>{{ weather.current.condition.text }}</td>
+                        </tr>
+                        <tr>
+                            <th>Wind</th>
+                            <td>{{ weather.current.wind_kph }} km/h</td>
+                        </tr>
+                        <tr>
+                            <th>Humidity</th>
+                            <td>{{ weather.current.humidity }}%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}
