@@ -51,8 +51,8 @@ This project builds upon a simple weather API by adding dynamic geo-location and
 1. **Clone the Repository:**
 
    ```bash
-   git clone https://github.com/YourUsername/GeoCache-Weather-App.git
-   cd GeoCache-Weather-App
+   git clone https://github.com/AsHkAn-Django/GeoCache-Weather-App-Tutorial.git
+   cd GeoCache-Weather-App-Tutorial
 2. **Clone the Repository:**
 
     ```bash
