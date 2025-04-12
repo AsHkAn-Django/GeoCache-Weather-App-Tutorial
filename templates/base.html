@@ -12,8 +12,8 @@
 <body>
 <nav class="navbar bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand">Ashkan Weather</a>
-        <form class="d-flex" role="search" method="get">
+        <a class="navbar-brand" href="{% url 'send_coordinates' %}">Ashkan Weather</a>
+        <form class="d-flex" role="search" method="get" action="{% url 'get_weather' %}">
             <input class="form-control me-2" type="search" name="query" placeholder="Enter city name" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
@@ -30,7 +30,7 @@
             <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">FAQs</a></li>
             <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">About</a></li>
         </ul>
-        <p class="text-center text-body-secondary">© 2025 By Ashkan, Powered by <a href="https://www.weatherapi.com/">
+        <p class="text-center text-body-secondary">© {% now "Y" %} By Ashkan, Powered by <a href="https://www.weatherapi.com/">
             WeatherApi
         </a></p>
     </footer>

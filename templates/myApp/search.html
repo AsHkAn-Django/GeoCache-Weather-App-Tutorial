@@ -62,27 +62,7 @@
             </div>
         </div>
     </div>
-    {% else %}
     {% endif %}
 </div>
-<script>
-    // Check if the current page is the home page ("/") and if the URL does not already have 'coord'
-    if (window.location.pathname === "/" && !window.location.search.includes("coord")) {
-      const successCallback = (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-    
-        // Redirect to home URL with the coordinates as query parameters
-        window.location.href = `/?coord=${lat}&coord=${lng}`;
-      };
-    
-      const errorCallback = (error) => {
-        console.log(error);
-      };
-    
-      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
-    }
-  </script>
-  
 {% endblock content %}
 
