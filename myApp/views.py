@@ -2,6 +2,8 @@ from django.views.generic import TemplateView
 import requests
 from django.shortcuts import render
 from environs import Env
+from django.core.cache import cache
+
 
 
 env = Env()
@@ -41,19 +43,27 @@ def fetch_weather_data(city):
 
 def receive_coordinates(request):
     """Show the user's current location weather."""
+    current_location_weather = None
+    city = None
     coords = request.GET.getlist("coord") 
     api_key = env.str('API_KEY')
 
-    if coords:
-        lat = coords[0]
-        lon = coords[1]
-        url = f"http://api.weatherapi.com/v1/current.json?key={api_key}&q={lat},{lon}"
-        try:
-            response = response = requests.get(url)
-            response.raise_for_status()
-            current_location = response.json()
-            city = current_location["location"]["name"]
-        except requests.exceptions.RequestException:
-            current_location = None
-            city = None    
-    return render(request, 'myApp/index.html', {'weather':current_location, 'city': city})
+    if coords and len(coords) == 2:
+        lat, lon = coords[0], coords[1]
+        cache_key = f"weather_{lat}_{lon}"
+        current_location_weather = cache.get(cache_key)
+        if not current_location_weather: 
+            print("Nabood")
+            url = f"http://api.weatherapi.com/v1/current.json?key={api_key}&q={lat},{lon}"
+            try:
+                response = response = requests.get(url)
+                response.raise_for_status()
+                current_location_weather = response.json()
+                city = current_location_weather["location"]["name"]
+                cache.set(cache_key, current_location_weather, 300)
+            except requests.exceptions.RequestException:
+                current_location_weather = None
+
+        if current_location_weather:
+            city = current_location_weather.get("location", {}).get("name")
+    return render(request, 'myApp/index.html', {'weather':current_location_weather, 'city': city})
