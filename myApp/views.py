@@ -19,9 +19,13 @@ class GetWeatherView(TemplateView):
         weather_info = None
         
         if city:
-            weather_info = fetch_weather_data(city)
-            if 'error' not in weather_info and not weather_info.get('current'):
-                weather_info = {'error': "City couldn't be found!"}
+            weather_info = cache.get(city)
+            
+            if not weather_info:
+                weather_info = fetch_weather_data(city)
+                cache.set(city, weather_info, 300)
+                if 'error' not in weather_info and not weather_info.get('current'):
+                    weather_info = {'error': "City couldn't be found!"}
                         
         context.update({'weather': weather_info,'city': city})
         return context
@@ -29,6 +33,7 @@ class GetWeatherView(TemplateView):
 
 def fetch_weather_data(city):
     """Fetch weather data from the API."""
+    print("nabooooooooddd")
     api_key = env.str('API_KEY')
     try:
         response = requests.get(
@@ -53,7 +58,6 @@ def receive_coordinates(request):
         cache_key = f"weather_{lat}_{lon}"
         current_location_weather = cache.get(cache_key)
         if not current_location_weather: 
-            print("Nabood")
             url = f"http://api.weatherapi.com/v1/current.json?key={api_key}&q={lat},{lon}"
             try:
                 response = response = requests.get(url)
