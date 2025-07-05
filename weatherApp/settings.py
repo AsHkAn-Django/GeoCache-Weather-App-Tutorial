@@ -145,3 +145,6 @@ CACHES = {
         'LOCATION': 'unique-snowflake',  # Unique identifier for this cache instance
     }
 }
+
+
+WEATHERAPI_API_KEY = env.str('WEATHERAPI_API_KEY')
