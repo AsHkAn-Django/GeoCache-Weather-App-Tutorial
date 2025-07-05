@@ -9,7 +9,7 @@
     </div>
 
     <div class="card shadow-sm p-4">
-        <form action="{% url 'get_weather' %}" method="get" class="row g-3 justify-content-center">
+        <form action="{% url 'myApp:get_weather' %}" method="get" class="row g-3 justify-content-center">
             <div class="col-auto">
                 <label for="query" class="visually-hidden">City Name:</label>
                 <input type="text" name="query" id="query" class="form-control" placeholder="Enter city name">
@@ -66,23 +66,25 @@
     {% endif %}
 </div>
 <script>
-    // Check if the current page is the home page ("/") and if the URL does not already have 'coord'
-    if (window.location.pathname === "/" && !window.location.search.includes("coord")) {
-      const successCallback = (position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-    
-        // Redirect to home URL with the coordinates as query parameters
-        window.location.href = `/?coord=${lat}&coord=${lng}`;
-      };
-    
-      const errorCallback = (error) => {
-        console.log(error);
-      };
-    
-      navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+    // Run only on home page and only if lat/lon not already in URL
+    if (window.location.pathname === "/" && !window.location.search.includes("lat") && !window.location.search.includes("lon")) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          // Redirect with lat/lon query params
+          window.location.href = `/?lat=${lat}&lon=${lon}`;
+        },
+        (error) => {
+          console.error("Geolocation error:", error);
+        }
+      );
+    } else if (window.location.search.includes("lat") && window.location.search.includes("lon")) {
+      // After loading with lat/lon, remove query params from URL without reloading page
+      const cleanUrl = window.location.origin + window.location.pathname;
+      window.history.replaceState({}, document.title, cleanUrl);
     }
   </script>
-  
+
 {% endblock content %}
 

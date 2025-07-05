@@ -1,0 +1,13 @@
+name: docker-weather-api-project
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: weather-api-image
+    container_name: weather-api-container
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app

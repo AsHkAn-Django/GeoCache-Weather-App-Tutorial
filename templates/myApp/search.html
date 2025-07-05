@@ -9,7 +9,7 @@
     </div>
 
     <div class="card shadow-sm p-4">
-        <form action="{% url 'get_weather' %}" method="get" class="row g-3 justify-content-center">
+        <form action="{% url 'myApp:get_weather' %}" method="get" class="row g-3 justify-content-center">
             <div class="col-auto">
                 <label for="query" class="visually-hidden">City Name:</label>
                 <input type="text" name="query" id="query" class="form-control" placeholder="Enter city name">
