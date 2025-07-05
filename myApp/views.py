@@ -3,7 +3,10 @@ import requests
 from django.shortcuts import render
 from django.core.cache import cache
 from django.conf import settings
+import logging
 
+
+logger = logging.getLogger(__name__)
 
 API_KEY = settings.WEATHERAPI_API_KEY
 
@@ -43,7 +46,7 @@ def fetch_weather_for_city(city):
 
 
 def receive_coordinates(request):
-    """Get the cordinates of current location of user."""
+    """Get the coordinates of current location of user."""
     current_location_weather = None
     city = None
     lat = request.GET.get('lat')
@@ -51,14 +54,21 @@ def receive_coordinates(request):
 
     if lat and lon:
         cache_key = f"weather_{lat}_{lon}"
-        print(f"Your cordinates are: lat={lat}, lon={lon}")
+        logger.info(f"✅ Geolocation got the Coordinates Successfuly! Your coordinates are: lat={lat}, lon={lon}")
+
         current_location_weather = cache.get(cache_key)
 
         if not current_location_weather:
-            city = fetch_weather_for_cord(lat, lon, cache_key)["location"]["name"]
+            weather_data = fetch_weather_for_cord(lat, lon, cache_key)
+            if weather_data and "location" in weather_data:
+                city = weather_data["location"]["name"]
+                current_location_weather = weather_data
         else:
-            city = current_location_weather["location"]["name"]
+            if "location" in current_location_weather:
+                city = current_location_weather["location"]["name"]
+
     return render(request, 'myApp/index.html', {'weather': current_location_weather, 'city': city})
+
 
 
 
